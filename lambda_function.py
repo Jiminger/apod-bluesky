@@ -35,7 +35,7 @@ def parse_apod_response(response: requests.Response) -> Dict[str, Any]:
 
     return {
         "title": title,
-        "copyright": copyright,
+        "copyright": copyright.strip(),
         "explanation": explanation,
         "url": url,
         "thumbnail_url": thumbnail_url,
@@ -49,16 +49,18 @@ def post_to_bluesky(parsed_response: Dict) -> None:
 
     text_builder = client_utils.TextBuilder()
     text_builder.text(parsed_response['title'])
+    
     if parsed_response['copyright'] is not None:
+        print('\nCopyright: ' + parsed_response['copyright'])
         text_builder.text('\nCopyright: ' + parsed_response['copyright'])
 
-    if parsed_response['media_type'] != 'video':
-        client.send_image(text=text_builder, image=parsed_response['image_data'], image_alt=parsed_response['explanation'])
-    else:
+    if parsed_response['media_type'] == 'video':
         text_builder.text('\n\nClick ')
         text_builder.link('here', parsed_response['url'])
         text_builder.text(' to watch the video.')
-        client.send_image(text=text_builder, image=parsed_response['image_data'], image_alt=parsed_response['explanation'])
+    
+    client.send_image(text=text_builder, image=parsed_response['image_data'], image_alt=parsed_response['explanation'])
+    
         
 
 def lambda_handler(event, context):
