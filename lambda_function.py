@@ -21,7 +21,7 @@ def get_apod() -> requests.Response:
 def parse_apod_response(response: requests.Response) -> Dict[str, Any]:
     data = response.json()
     title = data.get('title')
-    copyright = data.get('copyright')
+    copyright = data.get('copyright').strip()
     explanation = data.get('explanation')
     media_type = data.get('media_type')
 
