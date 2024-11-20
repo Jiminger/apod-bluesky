@@ -3,8 +3,6 @@ from typing import Any, Dict
 from atproto import Client, client_utils
 import requests
 
-
-# Load environment variables
 APOD_URL = "https://api.nasa.gov/planetary/apod"
 APOD_API_KEY = os.environ["APOD_API_KEY"]  
 BLUESKY_HANDLE = os.environ["BLUESKY_HANDLE"]
@@ -21,7 +19,7 @@ def get_apod() -> requests.Response:
 def parse_apod_response(response: requests.Response) -> Dict[str, Any]:
     data = response.json()
     title = data.get('title')
-    copyright = data.get('copyright').strip()
+    copyright = data.get('copyright')
     explanation = data.get('explanation')
     media_type = data.get('media_type')
 
@@ -35,7 +33,7 @@ def parse_apod_response(response: requests.Response) -> Dict[str, Any]:
 
     return {
         "title": title,
-        "copyright": copyright.strip(),
+        "copyright": copyright,
         "explanation": explanation,
         "url": url,
         "thumbnail_url": thumbnail_url,
@@ -51,8 +49,7 @@ def post_to_bluesky(parsed_response: Dict) -> None:
     text_builder.text(parsed_response['title'])
     
     if parsed_response['copyright'] is not None:
-        print('\nCopyright: ' + parsed_response['copyright'])
-        text_builder.text('\nCopyright: ' + parsed_response['copyright'])
+        text_builder.text('\nCopyright: ' + parsed_response['copyright'].strip())
 
     if parsed_response['media_type'] == 'video':
         text_builder.text('\n\nClick ')
