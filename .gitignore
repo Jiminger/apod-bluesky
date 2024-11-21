@@ -173,8 +173,5 @@ pyrightconfig.json
 # zip file
 *.zip
 
-# layer directory
-layer/
-
 
 
