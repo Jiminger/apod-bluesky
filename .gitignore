@@ -170,8 +170,11 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-# temporary files
-/tmp
+# zip file
+*.zip
+
+# layer directory
+layer/
 
 
 
